@@ -8,15 +8,6 @@ from gi.repository import GObject
 
 
 
-
-
-BACK = [1, 1, 1, 1]
-FRONT = [0, 0, 0, 0.1]
-
-SIZE = 200
-pix=1.0/SIZE
-
-
 class Render(object):
     """contains the cairo image surface and context information as well as abs
     color information. also has all of the actual shape drawing information"""
@@ -66,7 +57,7 @@ class Render(object):
 
 class Animate(Render):
 
-    def __init__(self, n, front, back):
+    def __init__(self, n, front, back,interval,step):
         Render.__init__(self, n, front, back)
 
         window = Gtk.Window()
@@ -74,23 +65,25 @@ class Animate(Render):
         window.resize(self.n, self.n)
 
         window.connect("destroy", self.__destroy)
+
         darea = Gtk.DrawingArea()
         self.darea = darea
 
         window.add(darea)
         window.show_all()
-
+        self.step=step
         self.steps = 0
 
         #idle function that will continue to run as long as it remains true
-        GObject.timeout_add(0.1,self.step) #interval is in milliseconds
+        GObject.timeout_add(interval,self.steper) #interval is in milliseconds
 
-    def step(self):
+    def steper(self):
         """this is the function that is run repeatedly"""
-        render.random_point()
+         # draw function that will be used.
+        repeat = self.step(self)
         self.steps += 1
         self.expose()
-        return True
+        return repeat
 
     # Starts and finishes the animation window setup and teardown functions
     def __destroy(self,*args):
@@ -106,5 +99,16 @@ class Animate(Render):
 
 if __name__ == '__main__':
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
-    render = Animate(SIZE, BACK, FRONT)
+
+    # These are the required arguments for the Animation
+    BACK = [1, 1, 1, 1]
+    FRONT = [149/255, 131/255, 189/255, 0.5]
+    SIZE = 200
+    def step(self):
+        render.random_point()
+        return True
+
+
+    # These are the bits that need to be run when calling the Animation
+    render = Animate(SIZE, BACK, FRONT,1,step)
     render.start()
