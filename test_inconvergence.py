@@ -1,7 +1,15 @@
 import os
 import cairo as cairo
 import numpy as np
-os.chdir(os.path.dirname(os.path.realpath(__file__)))
+import gi
+gi.require_version('Gtk', '3.0') #ensures correct version of gtk
+from gi.repository import Gtk
+from gi.repository import GObject
+
+
+
+
+
 BACK = [1, 1, 1, 1]
 FRONT = [0, 0, 0, 0.1]
 
@@ -9,28 +17,18 @@ SIZE = 200
 pix=1.0/SIZE
 
 
-
-
-
-
-
-
-
-
-
-
 class Render(object):
+    """contains the cairo image surface and context information as well as abs
+    color information. also has all of the actual shape drawing information"""
 
     def __init__(self,n, back, front):
         self.n = n
         self.front = front
         self.back = back
         self.pix = 1./float(n)
-
         self.colors = []
         self.ncolors = 0
         self.num_img = 0
-
         self.__init_cairo()
 
 
@@ -38,10 +36,8 @@ class Render(object):
         sur = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.n, self.n)
         ctx = cairo.Context(sur)
         ctx.scale(self.n, self.n)
-
         self.sur = sur
         self.ctx = ctx
-
         self.clear_canvas()
 
 
@@ -70,68 +66,45 @@ class Render(object):
 
 class Animate(Render):
 
-    def __init__(self, n, front, back, step):
-
-        from gi.repository import Gtk
-        from gi.repository import GObject
-
+    def __init__(self, n, front, back):
         Render.__init__(self, n, front, back)
 
         window = Gtk.Window()
         self.window = window
         window.resize(self.n, self.n)
 
-        self.step = step
-
         window.connect("destroy", self.__destroy)
         darea = Gtk.DrawingArea()
-        # darea.connect("expose-event", self.expose)
         self.darea = darea
 
         window.add(darea)
         window.show_all()
 
-        #self.cr = self.darea.window.cairo_create()
         self.steps = 0
 
         #idle function that will continue to run as long as it remains true
-        GObject.idle_add(self.step_wrap)
+        GObject.timeout_add(0.1,self.step) #interval is in milliseconds
 
-    def step_wrap(self):
-        res = self.step(self)
+    def step(self):
+        """this is the function that is run repeatedly"""
+        render.random_point()
         self.steps += 1
         self.expose()
+        return True
 
-        return res
-
-
+    # Starts and finishes the animation window setup and teardown functions
     def __destroy(self,*args):
-
-        from gi.repository import Gtk
-
         Gtk.main_quit(*args)
-
     def start(self):
-        from gi.repository import Gtk
         Gtk.main()
 
     def expose(self, *args):
-
-        #cr = self.cr
-        # cr = self.darea.window.cairo_create()
         cr = self.darea.get_property('window').cairo_create()
         cr.set_source_surface(self.sur, 0, 0)
         cr.paint()
 
 
-
-
-
 if __name__ == '__main__':
-
-    def wrap(render):
-        render.random_point()
-        return True
-
-    render = Animate(SIZE, BACK, FRONT, wrap)
+    os.chdir(os.path.dirname(os.path.realpath(__file__)))
+    render = Animate(SIZE, BACK, FRONT)
     render.start()
