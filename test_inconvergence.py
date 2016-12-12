@@ -6,6 +6,19 @@ gi.require_version('Gtk', '3.0') #ensures correct version of gtk
 from gi.repository import Gtk
 from gi.repository import GObject
 
+class Particle(object):
+    def __init__(self,x,y,velocity):
+
+        self.position = np.array([x,y])
+        self.velocity = velocity
+        assert len(self.velocity)==2
+
+
+    def move(self):
+        self.position= np.add(self.velocity, self.position)
+    def accelerate(self,a):
+        self.velocity=np.add(self.velocity,a)
+
 
 
 class Render(object):
@@ -46,9 +59,11 @@ class Render(object):
         pix = self.pix
         ctx.rectangle(x, y, pix, pix)
         ctx.fill()
-    def random_point(self):
-        x,y=np.random.random(1)[0],np.random.random(1)[0]
-        self.dot(x,y)
+
+
+    def circle(self,x,y,r):
+        self.ctx.arc(x,y,r,0,np.pi*2)
+        self.ctx.fill()
 
 
 
@@ -80,6 +95,8 @@ class Animate(Render):
     def steper(self):
         """this is the function that is run repeatedly"""
          # draw function that will be used.
+
+
         repeat = self.step(self)
         self.steps += 1
         self.expose()
@@ -102,13 +119,25 @@ if __name__ == '__main__':
 
     # These are the required arguments for the Animation
     BACK = [1, 1, 1, 1]
-    FRONT = [149/255, 131/255, 189/255, 0.5]
-    SIZE = 200
+    FRONT = [149/255, 131/255, 189/255, 1]
+    SIZE = 1000
+    UNIT=1.0/SIZE
+    number=10 # number of particles in the system
+    particles=[None]*number
+    for i in range(number):
+         particles[i] = Particle(0.5+i/20, 0.5, [0,0])
+
+
     def step(self):
-        render.random_point()
+        # render.clear_canvas()
+        for particle in particles:
+            pos=particle.position
+            particle.move()
+            render.circle(pos[0],pos[1],2*render.pix)
+            particle.accelerate([0,UNIT/10])
         return True
 
 
     # These are the bits that need to be run when calling the Animation
-    render = Animate(SIZE, BACK, FRONT,1,step)
+    render = Animate(SIZE, BACK, FRONT,100,step)
     render.start()
