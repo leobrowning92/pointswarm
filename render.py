@@ -5,6 +5,9 @@ import gi
 gi.require_version('Gtk', '3.0') #ensures correct version of gtk
 from gi.repository import Gtk
 from gi.repository import GObject
+import time
+
+
 
 
 class Render(object):
@@ -90,6 +93,7 @@ class Animate(Render):
 
     # Starts and finishes the animation window setup and teardown functions
     def __destroy(self,*args):
+        self.sur.write_to_png(time.strftime("pics/"+'%Y-%m-%d_%H-%M-%S')+".png")
         Gtk.main_quit(*args)
     def start(self):
         Gtk.main()

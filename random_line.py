@@ -26,13 +26,13 @@ if __name__ == '__main__':
 
     # These are the required arguments for the Animation
     BACK = [1, 1, 1, 1]
-    FRONT = [149/255, 131/255, 189/255, 1]
+    FRONT = [149/255, 131/255, 189/255, 0.05]
     SIZE = 1000
     UNIT=1.0/SIZE
-    number=10 # number of particles in the system
+    number=1000 # number of particles in the system
     particles=[None]*number
     for i in range(number):
-         particles[i] = Particle(0.5+i/20, 0.5, [0,0])
+         particles[i] = Particle(0.5/number+i/number, 0.5, [0,0])
 
 
     def step(self):
@@ -41,7 +41,7 @@ if __name__ == '__main__':
             pos=particle.position
             particle.move()
             render.circle(pos[0],pos[1],2*render.pix)
-            particle.accelerate([0,UNIT/10])
+            particle.accelerate(0,np.random.uniform(-UNIT/10,UNIT/10)])
         return True
 
 
