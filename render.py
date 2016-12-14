@@ -6,6 +6,7 @@ gi.require_version('Gtk', '3.0') #ensures correct version of gtk
 from gi.repository import Gtk
 from gi.repository import GObject
 import time
+import matplotlib.cm as cm
 
 
 
@@ -25,6 +26,8 @@ class Render(object):
         self.__init_cairo()
 
 
+
+
     def __init_cairo(self):
         sur = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.n, self.n)
         ctx = cairo.Context(sur)
@@ -33,6 +36,8 @@ class Render(object):
         self.ctx = ctx
         self.clear_canvas()
 
+    def colorset(self,color):
+        self.ctx.set_source_rgba(*color)
 
     def clear_canvas(self):
         ctx = self.ctx
@@ -61,7 +66,7 @@ class Render(object):
 
 class Animate(Render):
 
-    def __init__(self, n, front, back,interval,step):
+    def __init__(self, n, front, back,interval,step,save=True,stop=-1):
         Render.__init__(self, n, front, back)
 
         window = Gtk.Window()
@@ -77,6 +82,11 @@ class Animate(Render):
         window.show_all()
         self.step=step
         self.steps = 0
+        self.save=save
+        self.stop=stop
+        if self.stop!=-1:
+            cm_subsection = np.linspace(0,1, self.stop)
+            self.colors = [ cm.plasma(x,alpha=0.05) for x in cm_subsection ]
 
         #idle function that will continue to run as long as it remains true
         GObject.timeout_add(interval,self.steper) #interval is in milliseconds
@@ -87,13 +97,22 @@ class Animate(Render):
 
 
         repeat = self.step(self)
-        self.steps += 1
+
         self.expose()
-        return repeat
+
+        if self.stop==-1:
+            return True
+        elif self.steps<=self.stop:
+            self.colorset(self.colors[self.steps])
+            self.steps += 1
+            return True
+        else:
+            return False
 
     # Starts and finishes the animation window setup and teardown functions
     def __destroy(self,*args):
-        self.sur.write_to_png(time.strftime("pics/"+'%Y-%m-%d_%H-%M-%S')+".png")
+        if self.save:
+            self.sur.write_to_png(time.strftime("pics/"+'%Y-%m-%d_%H-%M-%S')+".png")
         Gtk.main_quit(*args)
     def start(self):
         Gtk.main()
