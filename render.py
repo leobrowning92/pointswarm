@@ -60,13 +60,28 @@ class Render(object):
         self.ctx.fill()
 
 
+class Image_Creator(Render):
+    def __init__(self, image_size, background_color, foreground_color, step_function, stop, name=""):
+        Render.__init__(self,image_size, background_color, foreground_color)
+        self.name=name
+        self.steps=0
+        self.stop=stop
+        self.step_function=step_function
 
+
+
+
+    def create(self):
+        while self.steps <= self.stop:
+            self.step_function(self)
+            self.steps +=1
+        self.sur.write_to_png(time.strftime("pics/"+'%Y-%m-%d_%H-%M-%S') + ".png")
 
 
 
 class Animate(Render):
 
-    def __init__(self, n, front, back,interval,step,save=True,stop=-1):
+    def __init__(self, n, front, back,step,stop=-1,interval=100,save=True):
         Render.__init__(self, n, front, back)
 
         window = Gtk.Window()
