@@ -47,8 +47,13 @@ if __name__ == '__main__':
         return True
 
 
-    # These are the bits that need to be run when calling the Animation
-    # render = Animate(image_size, background_color, foreground_color,step_function,interval=100,save=False)
-    # render.start()
-    image=Image_Creator(image_size, background_color, foreground_color, step_function, stop)
-    image.create()
+    show=True
+    if show:
+        # These are the bits that need to be run when calling the Animation
+        render = Animate(image_size, background_color, foreground_color,step_function,interval=100,save=False)
+        render.start()
+
+    else:
+        #this is what needs to be run to produce an image without animation
+        image=Image_Creator(image_size, background_color, foreground_color, step_function, stop)
+        image.create()

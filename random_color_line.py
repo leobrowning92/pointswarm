@@ -2,6 +2,7 @@ import os
 import cairo as cairo
 import numpy as np
 from render import Animate
+import matplotlib.cm as cm
 
 class Particle(object):
     def __init__(self,x,y,velocity):
@@ -26,13 +27,19 @@ if __name__ == '__main__':
 
     # These are the required arguments for the Animation
     background_color = [1, 1, 1, 1]
-    foreground_color = [149/255, 131/255, 189/255, 0.05]
+    foreground_color = [(149/255, 131/255, 189/255, 0.01)]
     image_size = 1000
     UNIT=1.0/image_size
-    number=10000 # number of particles in the system
+    number=10000# number of particles in the system
     particles=[None]*number
     for i in range(number):
          particles[i] = Particle(0.5/number+i/number, 0.5, [0,0])
+
+    total_steps=500
+
+    cm_subsection = np.linspace(0,1, total_steps)
+    foreground_colors = [ cm.plasma(x,alpha=0.05) for x in cm_subsection ]
+
 
 
     def step_function(self):
@@ -46,5 +53,5 @@ if __name__ == '__main__':
 
 
     # These are the bits that need to be run when calling the Animation
-    render = Animate(image_size, background_color, foreground_color,step_function,interval=100,save=False,stop=500)
+    render = Animate(image_size, background_color, foreground_colors,step_function,interval=100,save=False,stop=total_steps)
     render.start()

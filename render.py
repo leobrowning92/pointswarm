@@ -6,7 +6,7 @@ gi.require_version('Gtk', '3.0') #ensures correct version of gtk
 from gi.repository import Gtk
 from gi.repository import GObject
 import time
-import matplotlib.cm as cm
+
 
 
 
@@ -15,12 +15,12 @@ class Render(object):
     """contains the cairo image surface and context information as well as abs
     color information. also has all of the actual shape drawing information"""
 
-    def __init__(self,n, back, front):
+    def __init__(self,n, background_color, foreground_colors):
         self.n = n
-        self.front = front
-        self.back = back
+        self.colors=foreground_colors
+        self.background_color = background_color
         self.pix = 1./float(n)
-        self.colors = []
+
         self.ncolors = 0
         self.num_img = 0
         self.__init_cairo()
@@ -41,10 +41,10 @@ class Render(object):
 
     def clear_canvas(self):
         ctx = self.ctx
-        ctx.set_source_rgba(*self.back)
+        ctx.set_source_rgba(*self.background_color)
         ctx.rectangle(0, 0, 1, 1)
         ctx.fill()
-        ctx.set_source_rgba(*self.front)
+        ctx.set_source_rgba(*self.colors[0])
 
 
 
@@ -61,8 +61,8 @@ class Render(object):
 
 
 class Image_Creator(Render):
-    def __init__(self, image_size, background_color, foreground_color, step_function, stop, name=""):
-        Render.__init__(self,image_size, background_color, foreground_color)
+    def __init__(self, image_size, background_colorground_color, foreground_color, step_function, stop, name=""):
+        Render.__init__(self,image_size, background_colorground_color, foreground_color)
         self.name=name
         self.steps=0
         self.stop=stop
@@ -81,8 +81,8 @@ class Image_Creator(Render):
 
 class Animate(Render):
 
-    def __init__(self, n, front, back,step,stop=-1,interval=100,save=True):
-        Render.__init__(self, n, front, back)
+    def __init__(self, n, foreground_color, background_color,step,stop=-1,interval=100,save=True):
+        Render.__init__(self, n, foreground_color, background_color)
 
         window = Gtk.Window()
         self.window = window
@@ -99,9 +99,10 @@ class Animate(Render):
         self.steps = 0
         self.save=save
         self.stop=stop
-        if self.stop!=-1:
-            cm_subsection = np.linspace(0,1, self.stop)
-            self.colors = [ cm.plasma(x,alpha=0.05) for x in cm_subsection ]
+
+
+
+
 
         #idle function that will continue to run as long as it remains true
         GObject.timeout_add(interval,self.steper) #interval is in milliseconds
@@ -118,7 +119,8 @@ class Animate(Render):
         if self.stop==-1:
             return True
         elif self.steps<=self.stop:
-            self.colorset(self.colors[self.steps])
+            if len(self.colors)!=1:
+                self.colorset(self.colors[self.steps])
             self.steps += 1
             return True
         else:
