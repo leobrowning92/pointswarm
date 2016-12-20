@@ -1,7 +1,7 @@
 import os
 import cairo as cairo
 import numpy as np
-from render import Animate
+from render import Animate, Image_Creator
 import matplotlib.cm as cm
 
 class Particle(object):
@@ -30,12 +30,12 @@ if __name__ == '__main__':
     foreground_color = [(149/255, 131/255, 189/255, 0.01)]
     image_size = 1000
     UNIT=1.0/image_size
-    number=10000# number of particles in the system
+    number=1000# number of particles in the system
     particles=[None]*number
     for i in range(number):
          particles[i] = Particle(0.5/number+i/number, 0.5, [0,0])
 
-    total_steps=500
+    total_steps=100
 
     cm_subsection = np.linspace(0,1, total_steps)
     foreground_colors = [ cm.plasma(x,alpha=0.05) for x in cm_subsection ]
@@ -52,6 +52,13 @@ if __name__ == '__main__':
         return True
 
 
-    # These are the bits that need to be run when calling the Animation
-    render = Animate(image_size, background_color, foreground_colors,step_function,interval=100,save=False,stop=total_steps)
-    render.start()
+    show=True
+    if show:
+        # These are the bits that need to be run when calling the Animation
+        render = Animate(image_size, background_color, foreground_colors, step_function, interval=100, save=False, stop=total_steps)
+        render.start()
+
+    else:
+        #this is what needs to be run to produce an image without animation
+        image=Image_Creator(image_size, background_color, foreground_colors, step_function, stop=total_steps)
+        image.create()

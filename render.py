@@ -61,8 +61,8 @@ class Render(object):
 
 
 class Image_Creator(Render):
-    def __init__(self, image_size, background_colorground_color, foreground_color, step_function, stop, name=""):
-        Render.__init__(self,image_size, background_colorground_color, foreground_color)
+    def __init__(self, image_size, background_color, foreground_colors, step_function, stop, name=""):
+        Render.__init__(self,image_size, background_color, foreground_colors)
         self.name=name
         self.steps=0
         self.stop=stop
@@ -72,7 +72,9 @@ class Image_Creator(Render):
 
 
     def create(self):
-        while self.steps <= self.stop:
+        while self.steps < self.stop:
+            if len(self.colors)!=1:
+                self.colorset(self.colors[self.steps])
             self.step_function(self)
             self.steps +=1
         self.sur.write_to_png(time.strftime("pics/"+'%Y-%m-%d_%H-%M-%S') + ".png")
@@ -99,11 +101,6 @@ class Animate(Render):
         self.steps = 0
         self.save=save
         self.stop=stop
-
-
-
-
-
         #idle function that will continue to run as long as it remains true
         GObject.timeout_add(interval,self.steper) #interval is in milliseconds
 
@@ -118,7 +115,7 @@ class Animate(Render):
 
         if self.stop==-1:
             return True
-        elif self.steps<=self.stop:
+        elif self.steps<self.stop:
             if len(self.colors)!=1:
                 self.colorset(self.colors[self.steps])
             self.steps += 1
