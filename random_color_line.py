@@ -17,12 +17,20 @@ class Particle(object):
     def accelerate(self,a):
         self.velocity=np.add(self.velocity,a)
 
+def random_accelerator(magnitude):
+    return np.array([ np.random.uniform(-magnitude,magnitude), np.random.uniform(-magnitude,magnitude)])
+
+def point_repulsor(magnitude,position,particle):
+    norm=np.linalg.norm(particle-position)
+
+    return magnitude/(norm**2)*(particle-position)
 
 
 
 
 
 if __name__ == '__main__':
+
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
     # These are the required arguments for the Animation
@@ -30,14 +38,14 @@ if __name__ == '__main__':
     foreground_color = [(149/255, 131/255, 189/255, 0.01)]
     image_size = 1000
     UNIT=1.0/image_size
-    number=1000# number of particles in the system
+    number=10000# number of particles in the system
     particles=[None]*number
     for i in range(number):
          particles[i] = Particle(0.5/number+i/number, 0.5, [0,0])
 
-    total_steps=100
+    total_steps=200
 
-    cm_subsection = np.linspace(0,1, total_steps)
+    cm_subsection = np.linspace(1,0, total_steps)
     foreground_colors = [ cm.plasma(x,alpha=0.05) for x in cm_subsection ]
 
 
@@ -48,7 +56,7 @@ if __name__ == '__main__':
             pos=particle.position
             particle.move()
             self.circle(pos[0],pos[1],1*self.pix)
-            particle.accelerate([np.random.uniform(-UNIT/10,UNIT/10),np.random.uniform(-UNIT/10,UNIT/10)])
+            particle.accelerate(random_accelerator(UNIT/5)+ point_repulsor(UNIT/200,np.array([0.5,0.6]),pos))
         return True
 
 

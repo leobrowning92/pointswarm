@@ -25,9 +25,6 @@ class Render(object):
         self.num_img = 0
         self.__init_cairo()
 
-
-
-
     def __init_cairo(self):
         sur = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.n, self.n)
         ctx = cairo.Context(sur)
@@ -64,19 +61,15 @@ class Image_Creator(Render):
     def __init__(self, image_size, background_color, foreground_colors, step_function, stop, name=""):
         Render.__init__(self,image_size, background_color, foreground_colors)
         self.name=name
-        self.steps=0
         self.stop=stop
         self.step_function=step_function
 
-
-
-
     def create(self):
-        while self.steps < self.stop:
+        for i in range(self.stop):
             if len(self.colors)!=1:
-                self.colorset(self.colors[self.steps])
+                self.colorset(self.colors[i])
             self.step_function(self)
-            self.steps +=1
+
         self.sur.write_to_png(time.strftime("pics/"+'%Y-%m-%d_%H-%M-%S') + ".png")
 
 
