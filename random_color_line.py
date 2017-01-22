@@ -36,9 +36,9 @@ if __name__ == '__main__':
     # These are the required arguments for the Animation
     background_color = [1, 1, 1, 1]
     foreground_color = [(149/255, 131/255, 189/255, 0.01)]
-    image_size = 1000
+    image_size = 100
     UNIT=1.0/image_size
-    number=10000# number of particles in the system
+    number=100# number of particles in the system
     particles=[None]*number
     for i in range(number):
          particles[i] = Particle(0.5/number+i/number, 0.5, [0,0])
