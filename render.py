@@ -55,6 +55,11 @@ class Render(object):
     def circle(self,x,y,r):
         self.ctx.arc(x,y,r,0,np.pi*2)
         self.ctx.fill()
+    def line(self,start,end,width=1):
+        self.ctx.set_line_width(width)
+        self.ctx.move_to(start[0],start[1])
+        self.ctx.line_to(end[0],end[1])
+        self.ctx.stroke()
 
 
 class Image_Creator(Render):
@@ -63,9 +68,11 @@ class Image_Creator(Render):
         self.name=name
         self.stop=stop
         self.step_function=step_function
+        self.step=0
 
     def create(self):
         for i in range(self.stop):
+            self.step=i
             if len(self.colors)!=1:
                 self.colorset(self.colors[i])
             self.step_function(self)
@@ -100,8 +107,6 @@ class Animate(Render):
     def steper(self):
         """this is the function that is run repeatedly"""
          # draw function that will be used.
-
-
         repeat = self.step(self)
 
         self.expose()
