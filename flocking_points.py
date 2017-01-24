@@ -36,12 +36,12 @@ if __name__ == '__main__':
     # These are the required arguments for the Animation
     background_color = [1, 1, 1, 1]
     foreground_color = [(149/255, 131/255, 189/255, 0.01)]
-    image_size = 100
+    image_size = 500
     UNIT=1.0/image_size
-    number=100# number of particles in the system
+    number=10# number of particles in the system
     particles=[None]*number
     for i in range(number):
-         particles[i] = Particle(0.5/number+i/number, 0.5, [0,0])
+         particles[i] = Particle(0.5/number+i/number, np.random.uniform(0,1), [0,0])
 
     total_steps=200
 
@@ -52,11 +52,15 @@ if __name__ == '__main__':
 
     def step_function(self):
         # render.clear_canvas()
-        for particle in particles:
-            pos=particle.position
-            particle.move()
-            self.circle(pos[0],pos[1],1*self.pix)
-            particle.accelerate(random_accelerator(UNIT/5)+ point_repulsor(UNIT/200,np.array([0.5,0.6]),pos))
+        for primary_particle in particles:
+            primary_particle.move()
+            self.circle(primary_particle.position[0], primary_particle.position[1], 2*self.pix)
+            for other in particles:
+                #this code loop is for the particle-particle interractions
+                pass
+
+
+
         return True
 
 
