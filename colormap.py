@@ -17,12 +17,15 @@ def linear_gradient(start,finish,n=10):
 def polylinear_gradient(colors,spacing,n):
     """colors is a list of rgb colors, with spacing being the
     relative positions of the colors along the gradientself.
-    spacings are thus sequential numbers between 0 and 1"""
-    assert len(colors)==len(spacing)
-    assert n>=2*len(colors)
+    spacings are thus sequential numbers between 0 and 1
+    where the first and last items must be 0 and 1 respectively"""
+    assert len(colors)==len(spacing), "every color must have a corresponding spacing"
+    assert n>=2*len(colors) #soft cap on num of colors wrt n
     gradient=[]
-    for i in range(len(colors)):
-
+    for i in range(len(colors)-1):
+        gradient= gradient + linear_gradient(colors[i], colors[i+1], int(float(spacing[i+1])*n-float(spacing[i]*n)) )
+    print(len(gradient),n)
+    assert len(gradient)==n
 
     return gradient
 
@@ -39,8 +42,8 @@ if __name__ == '__main__':
 
 
 
-    foreground_colors=linear_gradient([.5,0,.5],[1,1,0],n=image_size)
-
+    #foreground_colors=linear_gradient([.5,0,.5],[1,1,0],n=image_size)
+    foreground_colors=polylinear_gradient([[0,0,0],[1,1,1],[0,0,0]],[0,0.2,1], n=image_size)
 
 
     def step_function(self):
