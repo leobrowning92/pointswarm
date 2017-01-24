@@ -29,6 +29,9 @@ def polylinear_gradient(colors,spacing,n):
 
     return gradient
 
+def hex_to_rgb(hex):
+    return [int(hex[i:i+2]) for i in range(1,6,2)]
+
 
 if __name__ == '__main__':
 
