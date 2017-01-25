@@ -57,6 +57,7 @@ if __name__ == '__main__':
             self.circle(primary_particle.position[0], primary_particle.position[1], 2*self.pix)
             for other in particles:
                 #this code loop is for the particle-particle interractions
+
                 pass
 
 
