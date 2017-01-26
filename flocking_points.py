@@ -8,7 +8,7 @@ class Particle(object):
     def __init__(self,x,y,velocity):
 
         self.position = np.array([x,y])
-        self.velocity = velocity
+        self.velocity = np.array(velocity)
         assert len(self.velocity)==2
 
 
@@ -25,8 +25,64 @@ def point_repulsor(magnitude,position,particle):
 
     return magnitude/(norm**2)*(particle-position)
 
+class BoidFlock(object):
+    """The boid flock is a collection of Particle objects with the added benifit of being able to have some flocking methods applied to it as a whole"""
+    def __init__(self,positions,velocities,scalings,ranges,unit):
+        assert len(positions)==len(velocities) , "the number of positions and velocities do not match"
+        self.flock=[Particle(positions[i][0],positions[i][0],velocities[i]) for i in range(len(positions))]
+
+        self.seperation_scaling=scalings[0]
+        self.alignment_scaling=scalings[1]
+        self.com_scaling=scalings[2]
+
+        self.seperation_range=ranges[0]
+        self.alignment_range=ranges[1]
+        self.com_range=ranges[2]
+
+        self.unit=unit
 
 
+    def move_flock(self):
+        for boid in self.flock:
+            boid.move()
+            v1 = self.get_seperation_velocity(boid)
+            v2 = self.get_alignment_velocity(boid)
+            v3 = self.get_com_velocity(boid)
+            boid.accelerate((v1+v2+v3))
+
+            
+
+    def get_seperation_velocity(self,target_boid):
+        """probably in this case the range should be >10x the scaling so as to have smothe acceleration away from one another"""
+        seperation_vector=np.array([0,0])
+        for boid in self.flock:
+            if boid !=target_boid:
+                if np.linalg.norm(boid.position-target_boid.position) < self.seperation_range:
+                    boid_difference=target_boid.position-boid.position
+
+                    #the 1/norm**2 term gives i/r scaling of this vector
+                    seperation_vector=seperation_vector + (boid_difference)/(np.linalg.norm(boid_difference)**2)
+        return seperation_vector * self.seperation_scaling
+
+
+    def get_alignment_velocity(self,target_boid):
+        """the alignment velocity is a scaled unit vector, and is not scaled proportional to how different the target boids velocity is from the alignment velocity"""
+        group_velocity = np.array([0,0])
+        for boid in self.flock:
+            if boid !=target_boid:
+                if np.linalg.norm(boid.position-target_boid.position) < self.alignment_range:
+                    group_velocity=np.add(boid.velocity,group_velocity)
+        return group_velocity * self.alignment_scaling * self.unit / np.linalg.norm(group_velocity)
+
+    def get_com_velocity(self,target_boid):
+        """the COM velocity is a scaled unit vector, and is not scaled proportional to how different the target boids positions is from the COM"""
+        centre_of_mass = np.array([0,0])
+        for boid in self.flock:
+            if boid !=target_boid:
+                if np.linalg.norm(boid.position-target_boid.position) < self.com_scaling:
+                    centre_of_mass=np.add(boid.position,centre_of_mass)
+        com_vector=centre_of_mass - target_boid.position
+        return com_vector * self.com_scaling * self.unit / np.linalg.norm(com_vector)
 
 
 if __name__ == '__main__':
