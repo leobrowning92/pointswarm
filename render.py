@@ -19,7 +19,7 @@ class Render(object):
         self.n = n
         self.colors=foreground_colors
         self.background_color = background_color
-        self.pix = 1./float(n)
+        self.unit = 1./float(n)
 
         self.ncolors = 0
         self.num_img = 0
@@ -47,7 +47,7 @@ class Render(object):
 
     def dot(self, x, y):
         ctx = self.ctx
-        pix = self.pix
+        pix = self.unit
         ctx.rectangle(x, y, pix, pix)
         ctx.fill()
 

@@ -55,7 +55,7 @@ if __name__ == '__main__':
         for particle in particles:
             pos=particle.position
             particle.move()
-            self.circle(pos[0],pos[1],1*self.pix)
+            self.circle(pos[0],pos[1],1*self.unit)
             particle.accelerate(random_accelerator(UNIT/5)+ point_repulsor(UNIT/200,np.array([0.5,0.6]),pos))
         return True
 
