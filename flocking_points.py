@@ -48,6 +48,8 @@ class BoidFlock(object):
             v1 = self.get_seperation_velocity(boid)
             v2 = self.get_alignment_velocity(boid)
             v3 = self.get_com_velocity(boid)
+            #print(np.isnan(v1),np.isnan(v2),np.isnan(v3))
+
             boid.accelerate((v1+v2+v3))
 
 
@@ -55,7 +57,8 @@ class BoidFlock(object):
 
     def get_seperation_velocity(self,target_boid):
         """probably in this case the range should be >10x the scaling so as to have smothe acceleration away from one another"""
-        seperation_vector=np.array([0,0])
+        seperation_vector=np.zeros(2)
+        group = False #flag set true if there are any boids within the range
         for boid in self.boids:
             if boid !=target_boid:
                 if np.linalg.norm(boid.position-target_boid.position) < self.seperation_range:
@@ -63,29 +66,40 @@ class BoidFlock(object):
 
                     #the 1/norm**2 term gives i/r scaling of this vector
                     seperation_vector=seperation_vector + (boid_difference)/(np.linalg.norm(boid_difference))
-        return seperation_vector * self.seperation_scaling *self.unit
+                    group = True
+        if group:
+            return seperation_vector * self.seperation_scaling *self.unit
+        else:
+            return np.zeros(2)
 
 
     def get_alignment_velocity(self,target_boid):
         """the alignment velocity is a scaled unit vector, and is not scaled proportional to how different the target boids velocity is from the alignment velocity"""
-        group_velocity = np.array([0,0])
+        group_velocity = np.zeros(2)
+        group = False #flag set true if there are any boids within the range
         for boid in self.boids:
             if boid !=target_boid:
                 if np.linalg.norm(boid.position-target_boid.position) < self.alignment_range:
                     group_velocity=np.add(boid.velocity,group_velocity)
-
-        return group_velocity * self.alignment_scaling * self.unit / np.linalg.norm(group_velocity)
-
+                    group = True
+        if group:
+            return group_velocity * self.alignment_scaling * self.unit / np.linalg.norm(group_velocity)
+        else:
+            return np.zeros(2)
     def get_com_velocity(self,target_boid):
         """the COM velocity is a scaled unit vector, and is not scaled proportional to how different the target boids positions is from the COM"""
-        centre_of_mass = np.array([0,0])
+        centre_of_mass = np.zeros(2)
+        group = False #flag set true if there are any boids within the range
         for boid in self.boids:
             if boid !=target_boid:
                 if np.linalg.norm(boid.position-target_boid.position) < self.com_scaling:
                     centre_of_mass=np.add(boid.position,centre_of_mass)
+                    group = True
         com_vector=centre_of_mass - target_boid.position
-        return com_vector * self.com_scaling * self.unit / np.linalg.norm(com_vector)
-
+        if group:
+            return com_vector * self.com_scaling * self.unit / np.linalg.norm(com_vector)
+        else:
+            return np.zeros(2)
 
 if __name__ == '__main__':
 
@@ -104,7 +118,7 @@ if __name__ == '__main__':
         velocities[i] = [np.random.uniform(0,1)*unit, np.random.uniform(0,1)*unit]
 
 
-    total_steps=5
+    total_steps=1
 
     cm_subsection = np.linspace(1,0, total_steps)
     foreground_colors = [ cm.plasma(x,alpha=1) for x in cm_subsection ]
@@ -112,7 +126,7 @@ if __name__ == '__main__':
     flock = BoidFlock(positions, velocities, [0.1,0.1,0.1], np.multiply(unit,[10,100,100]),unit)
 
     def step_function(self):
-        print("step")
+        #print("step")
         #print(flock.boids[1].position,flock.boids[1].velocity)
         # render.clear_canvas()
         flock.move_flock()
