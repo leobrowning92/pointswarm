@@ -24,6 +24,13 @@ def point_repulsor(magnitude,position,particle):
     norm=np.linalg.norm(particle-position)
 
     return magnitude/(norm**2)*(particle-position)
+def angle_between(v1,v2):
+    dot=np.dot(v1,v2)/np.linalg.norm(v1)/np.linalg.norm(v2)
+    return np.arccos(np.clip(dot,-1,1))
+def rotate_angle(v,angle):
+    m=np.array([[np.cos(angle),-np.sin(angle)], [np.sin(angle),np.cos(angle)]])
+    return m.dot(v)
+
 
 class BoidFlock(object):
     """The boid flock is a collection of Particle objects with the added benifit of being able to have some flocking methods applied to it as a whole"""
@@ -82,8 +89,11 @@ class BoidFlock(object):
                 if np.linalg.norm(boid.position-target_boid.position) < self.alignment_range:
                     group_velocity=np.add(boid.velocity,group_velocity)
                     group = True
+
         if group:
-            return group_velocity * self.alignment_scaling * self.unit / np.linalg.norm(group_velocity)
+            angle=angle_between(group_velocity,target_boid.velocity)
+            rotated=rotate_angle(target_boid.velocity, -angle*self.alignment_scaling)
+            return rotated - target_boid.velocity
         else:
             return np.zeros(2)
     def get_com_velocity(self,target_boid):
@@ -108,9 +118,9 @@ if __name__ == '__main__':
     # These are the required arguments for the Animation
     background_color = [1, 1, 1, 1]
     foreground_color = [(149/255, 131/255, 189/255, 0.01)]
-    image_size = 500
+    image_size = 1000
     unit=1.0/image_size
-    number=100# number of particles in the system
+    number=200# number of particles in the system
     positions=[None]*number
     velocities=[None]*number
     for i in range(number):
@@ -124,7 +134,7 @@ if __name__ == '__main__':
     cm_subsection = np.linspace(1,0, total_steps)
     foreground_colors = [ cm.plasma(x,alpha=1) for x in cm_subsection ]
     # [seperation , alignment , com]
-    flock = BoidFlock(positions, velocities, [0.1,0.1,0.1], np.multiply(unit,[10,50,100]),unit)
+    flock = BoidFlock(positions, velocities, [0.1,0.1,0.1], np.multiply(unit,[10,50,50]),unit)
 
     def step_function(self):
 
