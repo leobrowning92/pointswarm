@@ -48,7 +48,7 @@ class BoidFlock(object):
             v1 = self.get_seperation_velocity(boid)
             v2 = self.get_alignment_velocity(boid)
             v3 = self.get_com_velocity(boid)
-            #print(np.isnan(v1),np.isnan(v2),np.isnan(v3))
+
 
             boid.accelerate((v1+v2+v3))
 
@@ -110,7 +110,7 @@ if __name__ == '__main__':
     foreground_color = [(149/255, 131/255, 189/255, 0.01)]
     image_size = 500
     unit=1.0/image_size
-    number=20# number of particles in the system
+    number=100# number of particles in the system
     positions=[None]*number
     velocities=[None]*number
     for i in range(number):
@@ -118,22 +118,20 @@ if __name__ == '__main__':
         velocities[i] = [np.random.uniform(0,1)*unit, np.random.uniform(0,1)*unit]
 
 
-    total_steps=1
+    total_steps=200
+
 
     cm_subsection = np.linspace(1,0, total_steps)
     foreground_colors = [ cm.plasma(x,alpha=1) for x in cm_subsection ]
-
-    flock = BoidFlock(positions, velocities, [0.1,0.1,0.1], np.multiply(unit,[10,100,100]),unit)
+    # [seperation , alignment , com]
+    flock = BoidFlock(positions, velocities, [0.1,0.1,0.1], np.multiply(unit,[10,50,100]),unit)
 
     def step_function(self):
-        #print("step")
-        #print(flock.boids[1].position,flock.boids[1].velocity)
-        # render.clear_canvas()
+
         flock.move_flock()
         for boid in flock.boids:
-            print(boid.position,boid.velocity)
             pos=boid.position
-            self.circle(pos[0],pos[1],10*self.unit)
+            self.circle(pos[0],pos[1],2*self.unit)
             #boid.accelerate(random_accelerator(unit/5))
         return True
 
