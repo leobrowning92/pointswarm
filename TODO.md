@@ -1,3 +1,5 @@
-- need to make the colormap an passed arguement to the Animation rather than an internal process. at the moment it simply happens with any
-- The end goal of this would be to allow the passing of custom colormaps. see [this](http://bsou.io/posts/color-gradients-with-python) article for an extremely clear article on how to generate the colormaps for the future.
-- then would be interesting to play around with non uniform color gradients, iehter from multiple linear interpolations, or via bezier curves.
+- need to wrap the flocking into a class.
+- write test cases for that class these could include
+    - a timing example for a specific set of cases iterating over image size and particle number. This could actually return logged timing to see if there is any variation over time
+    - visual check examples. ie two particles from opposite sides colliding, a couple of parallel particles from one side. stationary particle in center(null check)
+- after all this, make a new class that uses kd-trees instead. benchmark against brute force.
