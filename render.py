@@ -15,7 +15,7 @@ class Render(object):
     """contains the cairo image surface and context information as well as abs
     color information. also has all of the actual shape drawing information"""
 
-    def __init__(self,n, background_color, foreground_colors):
+    def __init__(self,n, foreground_colors, background_color):
         self.n = n
         self.colors=foreground_colors
         self.background_color = background_color
@@ -79,30 +79,54 @@ class Image_Creator(Render):
 
         self.sur.write_to_png(time.strftime("pics/"+'%Y-%m-%d_%H-%M-%S') + ".png")
 
+class Show(Render):
+    def __init__(self,image_size,foreground_colors,background_color,save=False):
+        Render.__init__(self,image_size,foreground_colors,background_color)
+        self.save=save
+        self.window=Gtk.Window()
+        self.window.resize(self.n, self.n)
 
-
-class Animate(Render):
-
-    def __init__(self, n, foreground_color, background_color,step,stop=-1,interval=100,save=True):
-        Render.__init__(self, n, foreground_color, background_color)
-
-        window = Gtk.Window()
-        self.window = window
-        window.resize(self.n, self.n)
-
-        window.connect("destroy", self.__destroy)
+        self.window.connect("destroy", self.__destroy)
 
         darea = Gtk.DrawingArea()
         self.darea = darea
 
-        window.add(darea)
-        window.show_all()
+        self.window.add(darea)
+        self.window.show_all()
+    def __destroy(self,*args):
+        if self.save:
+            self.sur.write_to_png(time.strftime("pics/"+'%Y-%m-%d_%H-%M-%S')+".png")
+        Gtk.main_quit(*args)
+    def start(self):
+        Gtk.main()
+
+    def expose(self, *args):
+        cr = self.darea.get_property('window').cairo_create()
+        cr.set_source_surface(self.sur, 0, 0)
+        cr.paint()
+
+class Animate(Render):
+
+    def __init__(self, n, foreground_colors, background_color,step,stop=-1,interval=100,save=True):
+        Render.__init__(self, n, foreground_colors, background_color)
+
+        self.window = Gtk.Window()
+        self.window.resize(self.n, self.n)
+
+        self.window.connect("destroy", self.__destroy)
+
+        darea = Gtk.DrawingArea()
+        self.darea = darea
+
+        self.window.add(darea)
+        self.window.show_all()
         self.step=step
         self.steps = 0
         self.save=save
         self.stop=stop
         #idle function that will continue to run as long as it remains true
         GObject.timeout_add(interval,self.steper) #interval is in milliseconds
+
 
     def steper(self):
         """this is the function that is run repeatedly"""
