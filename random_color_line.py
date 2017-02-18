@@ -34,7 +34,7 @@ if __name__ == '__main__':
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
     # These are the required arguments for the Animation
-    background_color = [1, 1, 1, 1]
+    background_color = [0.1, 0.1, 0.1, 1]
     foreground_color = [(149/255, 131/255, 189/255, 0.01)]
     image_size = 1000
     UNIT=1.0/image_size
@@ -55,7 +55,7 @@ if __name__ == '__main__':
         for particle in particles:
             pos=particle.position
             particle.move()
-            self.circle(pos[0],pos[1],3*self.unit)
+            self.circle(pos[0],pos[1],2*self.unit)
             particle.accelerate(random_accelerator(UNIT/5))#+ point_repulsor(UNIT/200,np.array([0.5,0.6]),pos))
         return True
 
