@@ -2,7 +2,7 @@ import os
 import cairo as cairo
 import numpy as np
 from render import Animate, Image_Creator
-import matplotlib.cm as cm
+import colormap as cm
 
 class Particle(object):
     def __init__(self,x,y,velocity):
@@ -36,17 +36,17 @@ if __name__ == '__main__':
     # These are the required arguments for the Animation
     background_color = [1, 1, 1, 1]
     foreground_color = [(149/255, 131/255, 189/255, 0.01)]
-    image_size = 100
+    image_size = 1000
     UNIT=1.0/image_size
-    number=100# number of particles in the system
+    number=1000# number of particles in the system
     particles=[None]*number
     for i in range(number):
-         particles[i] = Particle(0.5/number+i/number, 0.5, [0,0])
+         particles[i] = Particle(0.5, 0.5, [0,0])
 
-    total_steps=200
+    total_steps=500
 
     cm_subsection = np.linspace(1,0, total_steps)
-    foreground_colors = [ cm.plasma(x,alpha=0.05) for x in cm_subsection ]
+    foreground_colors = cm.random_colormap(2,total_steps,even=False,alpha=0.01)
 
 
 
@@ -55,8 +55,8 @@ if __name__ == '__main__':
         for particle in particles:
             pos=particle.position
             particle.move()
-            self.circle(pos[0],pos[1],1*self.unit)
-            particle.accelerate(random_accelerator(UNIT/5)+ point_repulsor(UNIT/200,np.array([0.5,0.6]),pos))
+            self.circle(pos[0],pos[1],3*self.unit)
+            particle.accelerate(random_accelerator(UNIT/5))#+ point_repulsor(UNIT/200,np.array([0.5,0.6]),pos))
         return True
 
 
