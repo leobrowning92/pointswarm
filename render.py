@@ -66,9 +66,9 @@ class Render(object):
 
 
 class Image_Creator(Render):
-    def __init__(self, image_size, background_color, foreground_colors, step_function, stop, name=""):
+    def __init__(self, image_size, background_color, foreground_colors, step_function, stop, fname):
         Render.__init__(self,image_size, background_color, foreground_colors)
-        self.name=name
+        self.fname=fname
         self.stop=stop
         self.step_function=step_function
         self.step=0
@@ -80,13 +80,13 @@ class Image_Creator(Render):
                 self.colorset(self.colors[i])
             self.step_function(self)
 
-        self.sur.write_to_png(time.strftime("pics/"+'%Y-%m-%d_%H-%M-%S') + ".png")
+        self.sur.write_to_png(time.strftime(fname))
 
 
 
 class Animate(Render):
 
-    def __init__(self, image_size, foreground_color, background_color,step,stop=-1,interval=100,save=True):
+    def __init__(self, image_size, foreground_color, background_color,step,stop=-1,interval=100,save=True,fname='test.png'):
         Render.__init__(self, image_size, foreground_color, background_color)
 
         window = Gtk.Window()
@@ -104,6 +104,7 @@ class Animate(Render):
         self.steps = 0
         self.save=save
         self.stop=stop
+        self.fname=fname
         #idle function that will continue to run as long as it remains true
         GObject.timeout_add(interval,self.steper) #interval is in milliseconds
 
@@ -127,7 +128,7 @@ class Animate(Render):
     # Starts and finishes the animation window setup and teardown functions
     def __destroy(self,*args):
         if self.save:
-            self.sur.write_to_png(time.strftime("pics/"+'%Y-%m-%d_%H-%M-%S')+".png")
+            self.sur.write_to_png(time.strftime(self.fname))
         Gtk.main_quit(*args)
     def start(self):
         Gtk.main()
