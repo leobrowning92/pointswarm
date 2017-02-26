@@ -18,7 +18,7 @@ class Particle(object):
         self.velocity=np.add(self.velocity,a)
 
 def random_accelerator(magnitude):
-    return np.array([ np.random.uniform(-magnitude,magnitude), np.random.uniform(-magnitude,magnitude)])
+    return np.array([ np.random.uniform(-magnitude,magnitude), np.random.uniform(-magnitude,magnitude)*image_size[0]/image_size[1]])
 
 def point_repulsor(magnitude,position,particle):
     norm=np.linalg.norm(particle-position)
@@ -36,8 +36,8 @@ if __name__ == '__main__':
     # These are the required arguments for the Animation
     background_color = [0.1, 0.1, 0.1, 1]
     foreground_color = [(149/255, 131/255, 189/255, 0.01)]
-    image_size = 1000
-    UNIT=1.0/image_size
+    image_size = [400,300]
+    UNIT=1.0/max(image_size)
     number=1000# number of particles in the system
     particles=[None]*number
     for i in range(number):
@@ -53,9 +53,8 @@ if __name__ == '__main__':
     def step_function(self):
         # render.clear_canvas()
         for particle in particles:
-            pos=particle.position
             particle.move()
-            self.circle(pos[0],pos[1],2*self.unit)
+            self.circle(*particle.position,2*self.unit)
             particle.accelerate(random_accelerator(UNIT/5))#+ point_repulsor(UNIT/200,np.array([0.5,0.6]),pos))
         return True
 

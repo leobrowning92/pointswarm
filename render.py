@@ -15,20 +15,21 @@ class Render(object):
     """contains the cairo image surface and context information as well as abs
     color information. also has all of the actual shape drawing information"""
 
-    def __init__(self,n, background_color, foreground_colors):
-        self.n = n
+    def __init__(self,image_size, background_color, foreground_colors):
+        self.image_size = image_size
         self.colors=foreground_colors
         self.background_color = background_color
-        self.unit = 1./float(n)
+        self.unit = 1./max(image_size)
+        assert image_size[0]>=image_size[1] , "oh no, things might get funny with an aspect ratio < 1, beware!"
 
         self.ncolors = 0
         self.num_img = 0
         self.__init_cairo()
 
     def __init_cairo(self):
-        sur = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.n, self.n)
+        sur = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.image_size[0],self.image_size[1])
         ctx = cairo.Context(sur)
-        ctx.scale(self.n, self.n)
+        ctx.scale(self.image_size[0],self.image_size[0])
         self.sur = sur
         self.ctx = ctx
         self.clear_canvas()
@@ -47,12 +48,14 @@ class Render(object):
 
     def dot(self, x, y):
         ctx = self.ctx
-        pix = self.unit
-        ctx.rectangle(x, y, pix, pix)
+        ctx.rectangle(x, y, 1./image_size[0], 1./image_size[1])
         ctx.fill()
-
+    def scalexy(self,xy):
+        #note, this only works if xdim,ydim
+        return xy[0],xy[1]*self.image_size[1]/self.image_size[0]
 
     def circle(self,x,y,r):
+        x,y =self.scalexy([x,y])
         self.ctx.arc(x,y,r,0,np.pi*2)
         self.ctx.fill()
     def line(self,start,end,width=1):
@@ -83,14 +86,14 @@ class Image_Creator(Render):
 
 class Animate(Render):
 
-    def __init__(self, n, foreground_color, background_color,step,stop=-1,interval=100,save=True):
-        Render.__init__(self, n, foreground_color, background_color)
+    def __init__(self, image_size, foreground_color, background_color,step,stop=-1,interval=100,save=True):
+        Render.__init__(self, image_size, foreground_color, background_color)
 
         window = Gtk.Window()
         self.window = window
-        window.resize(self.n, self.n)
+        self.window.resize(self.image_size[0],self.image_size[1])
 
-        window.connect("destroy", self.__destroy)
+        self.window.connect("destroy", self.__destroy)
 
         darea = Gtk.DrawingArea()
         self.darea = darea
