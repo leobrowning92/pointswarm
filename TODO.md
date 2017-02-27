@@ -5,6 +5,7 @@
     - visual check examples. ie two particles from opposite sides colliding, a couple of parallel particles from one side. stationary particle in center(null check)
 - after all this, make a new class that uses kd-trees instead. benchmark against brute force.
 - could also explore an expanded or altered rule set, which could include non-biological inspired rules. could think of "leader" or "predetor/repulsor" particles
+- see this link for a [tweet](https://twitter.com/mattdesl/status/835931748471013376) on images that probably incorporate altered rules
 
 ### samplecolor-dev
 new branch exploring the color sampling from images. uses k-mean clustering. could be used for pixel sorting.
