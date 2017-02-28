@@ -56,14 +56,14 @@ if __name__ == '__main__':
 
     # These are the required arguments for the Animation
     background_color = [1, 1, 1, 1]
-    image_size = 200
-    unit=1.0/image_size
-    total_steps=image_size
+    image_size = [200,200]
+    unit=1.0/max(image_size)
+    total_steps=max(image_size)
 
 
 
     #foreground_colors=linear_gradient([.5,0,.5],[1,1,0],n=image_size)
-    foreground_colors=random_colormap(3,image_size,even=False)
+    foreground_colors=random_colormap(3,total_steps,even=False)
 
 
     def step_function(self):

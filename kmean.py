@@ -24,12 +24,17 @@ if __name__ == '__main__':
     w=image_array.shape[1]
     image_list=np.reshape(image_array,((h*w),3)).shape
 
+    def draw(self,cr):
+        cr.set_line_width(9)
+        cr.set_source_rgb(0.7, 0.2, 0.0)
 
-    image_size=max(h,w)
+        w, h = self.get_size()
 
-    unit=1./image_size
+        cr.translate(w/2, h/2)
+        cr.arc(0, 0, 50, 0, 2*np.pi)
+        cr.stroke_preserve()
 
-    display=Show(image_size,[[0,0,1,1]],[0.1,1,1,1])
-    display.start()
-    display.line([0.6,0.6],[0.5,0.5],width=unit*10)
-    display.expose()
+        cr.set_source_rgb(0.3, 0.4, 0.6)
+        cr.fill()
+    os.chdir(os.path.dirname(os.path.realpath(__file__)))
+    app = Show(draw)

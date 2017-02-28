@@ -7,7 +7,31 @@ from gi.repository import Gtk
 from gi.repository import GObject
 import time
 
+class Show(Gtk.Window):
 
+    def __init__(self,draw):
+        super(Show, self).__init__()
+        self.draw=draw
+        self.init_ui()
+
+
+    def init_ui(self):
+
+        darea = Gtk.DrawingArea()
+        darea.connect("draw", self.on_draw)
+        self.add(darea)
+
+        self.set_title("Fill & stroke")
+        self.resize(230, 150)
+        self.set_position(Gtk.WindowPosition.CENTER)
+        self.connect("delete-event", Gtk.main_quit)
+        self.show_all()
+        Gtk.main()
+
+
+    def on_draw(self, wid, cr):
+        self.draw(self,cr)
+        print(cr,type(cr))
 
 
 
@@ -15,7 +39,7 @@ class Render(object):
     """contains the cairo image surface and context information as well as abs
     color information. also has all of the actual shape drawing information"""
 
-    def __init__(self,image_size, background_color, foreground_colors):
+    def __init__(self,image_size,background_color, foreground_colors):
         self.image_size = image_size
         self.colors=foreground_colors
         self.background_color = background_color
@@ -82,31 +106,6 @@ class Image_Creator(Render):
 
         self.sur.write_to_png(time.strftime(fname))
 
-class Show(Render):
-    def __init__(self,image_size,foreground_colors,background_color,save=False):
-        Render.__init__(self,image_size,foreground_colors,background_color)
-        self.save=save
-        self.window=Gtk.Window()
-        self.window.resize(self.n, self.n)
-
-        self.window.connect("destroy", self.__destroy)
-
-        darea = Gtk.DrawingArea()
-        self.darea = darea
-
-        self.window.add(darea)
-        self.window.show_all()
-    def __destroy(self,*args):
-        if self.save:
-            self.sur.write_to_png(time.strftime("pics/"+'%Y-%m-%d_%H-%M-%S')+".png")
-        Gtk.main_quit(*args)
-    def start(self):
-        Gtk.main()
-
-    def expose(self, *args):
-        cr = self.darea.get_property('window').cairo_create()
-        cr.set_source_surface(self.sur, 0, 0)
-        cr.paint()
 
 class Animate(Render):
 
@@ -138,7 +137,7 @@ class Animate(Render):
          # draw function that will be used.
         repeat = self.step(self)
 
-        self.expose()
+        self.draw()
 
         if self.stop==-1:
             return True
@@ -158,7 +157,7 @@ class Animate(Render):
     def start(self):
         Gtk.main()
 
-    def expose(self, *args):
+    def draw(self, *args):
         cr = self.darea.get_property('window').cairo_create()
         cr.set_source_surface(self.sur, 0, 0)
         cr.paint()
