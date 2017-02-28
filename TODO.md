@@ -8,11 +8,13 @@
 - see this link for a [tweet](https://twitter.com/mattdesl/status/835931748471013376) on images that probably incorporate altered rules
 - see this paper on [steering behaviour](https://red3d.com/cwr/papers/1999/gdc99steer.pdf) for some behavioural ideas
 
-### samplecolor-dev
-new branch exploring the color sampling from images. uses k-mean clustering. could be used for pixel sorting.
-- at the moment this exists as a file in another branch. needs to be seperated out, and then clean up branch structure.
+### colormap-dev
+explore the color sampling from images. 
+- could use [k-mean clustering](https://en.wikipedia.org/wiki/K-means_clustering) to group pixels from an image. however, k means tends to group to spatially equivalent groups, while [expectation-maximum](https://en.wikipedia.org/wiki/Expectation%E2%80%93maximization_algorithm) allows clusters of different sizes. Could investigate the differences between both 
+- a byproduct of the need to sample pixels from an image could be some sort of extensability to pixel sorting and image glitching. maybe sort, blocks of pixels on an image, or bands to produce glitch patterns?
 
-### colormap-dev and/or main
+
+### master
 1. do a central start, brownian with custom color maps *tweet*
 2. randomize colormaps *tweet my favorite*
     - make sure to log the colormap values and positions within the map space alongside images
