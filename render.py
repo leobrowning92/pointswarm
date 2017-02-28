@@ -15,20 +15,21 @@ class Render(object):
     """contains the cairo image surface and context information as well as abs
     color information. also has all of the actual shape drawing information"""
 
-    def __init__(self,n, foreground_colors, background_color):
-        self.n = n
+    def __init__(self,image_size, background_color, foreground_colors):
+        self.image_size = image_size
         self.colors=foreground_colors
         self.background_color = background_color
-        self.unit = 1./float(n)
+        self.unit = 1./max(image_size)
+        assert image_size[0]>=image_size[1] , "oh no, things might get funny with an aspect ratio < 1, beware!"
 
         self.ncolors = 0
         self.num_img = 0
         self.__init_cairo()
 
     def __init_cairo(self):
-        sur = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.n, self.n)
+        sur = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.image_size[0],self.image_size[1])
         ctx = cairo.Context(sur)
-        ctx.scale(self.n, self.n)
+        ctx.scale(self.image_size[0],self.image_size[0])
         self.sur = sur
         self.ctx = ctx
         self.clear_canvas()
@@ -47,12 +48,14 @@ class Render(object):
 
     def dot(self, x, y):
         ctx = self.ctx
-        pix = self.unit
-        ctx.rectangle(x, y, pix, pix)
+        ctx.rectangle(x, y, 1./image_size[0], 1./image_size[1])
         ctx.fill()
-
+    def scalexy(self,xy):
+        #note, this only works if xdim,ydim
+        return xy[0],xy[1]*self.image_size[1]/self.image_size[0]
 
     def circle(self,x,y,r):
+        x,y =self.scalexy([x,y])
         self.ctx.arc(x,y,r,0,np.pi*2)
         self.ctx.fill()
     def line(self,start,end,width=1):
@@ -63,9 +66,9 @@ class Render(object):
 
 
 class Image_Creator(Render):
-    def __init__(self, image_size, background_color, foreground_colors, step_function, stop, name=""):
+    def __init__(self, image_size, background_color, foreground_colors, step_function, stop, fname):
         Render.__init__(self,image_size, background_color, foreground_colors)
-        self.name=name
+        self.fname=fname
         self.stop=stop
         self.step_function=step_function
         self.step=0
@@ -77,7 +80,7 @@ class Image_Creator(Render):
                 self.colorset(self.colors[i])
             self.step_function(self)
 
-        self.sur.write_to_png(time.strftime("pics/"+'%Y-%m-%d_%H-%M-%S') + ".png")
+        self.sur.write_to_png(time.strftime(fname))
 
 class Show(Render):
     def __init__(self,image_size,foreground_colors,background_color,save=False):
@@ -107,11 +110,12 @@ class Show(Render):
 
 class Animate(Render):
 
-    def __init__(self, n, foreground_colors, background_color,step,stop=-1,interval=100,save=True):
-        Render.__init__(self, n, foreground_colors, background_color)
+    def __init__(self, image_size, foreground_color, background_color,step,stop=-1,interval=100,save=True,fname='test.png'):
+        Render.__init__(self, image_size, foreground_color, background_color)
 
-        self.window = Gtk.Window()
-        self.window.resize(self.n, self.n)
+        window = Gtk.Window()
+        self.window = window
+        self.window.resize(self.image_size[0],self.image_size[1])
 
         self.window.connect("destroy", self.__destroy)
 
@@ -124,6 +128,7 @@ class Animate(Render):
         self.steps = 0
         self.save=save
         self.stop=stop
+        self.fname=fname
         #idle function that will continue to run as long as it remains true
         GObject.timeout_add(interval,self.steper) #interval is in milliseconds
 
@@ -148,7 +153,7 @@ class Animate(Render):
     # Starts and finishes the animation window setup and teardown functions
     def __destroy(self,*args):
         if self.save:
-            self.sur.write_to_png(time.strftime("pics/"+'%Y-%m-%d_%H-%M-%S')+".png")
+            self.sur.write_to_png(time.strftime(self.fname))
         Gtk.main_quit(*args)
     def start(self):
         Gtk.main()
