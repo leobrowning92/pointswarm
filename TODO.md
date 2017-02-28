@@ -6,7 +6,7 @@
 - after all this, make a new class that uses kd-trees instead. benchmark against brute force.
 - could also explore an expanded or altered rule set, which could include non-biological inspired rules. could think of "leader" or "predetor/repulsor" particles
 - see this link for a [tweet](https://twitter.com/mattdesl/status/835931748471013376) on images that probably incorporate altered rules
-- see this paper on [steering behaviour](red3d.com/cwf/papers/1999/gdc99steer.pdf) for some behavioural ideas
+- see this paper on [steering behaviour](https://red3d.com/cwr/papers/1999/gdc99steer.pdf) for some behavioural ideas
 
 ### samplecolor-dev
 new branch exploring the color sampling from images. uses k-mean clustering. could be used for pixel sorting.
