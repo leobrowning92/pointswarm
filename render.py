@@ -9,10 +9,12 @@ import time
 
 class Show(Gtk.Window):
 
-    def __init__(self,draw):
+    def __init__(self,draw,image_size):
         super(Show, self).__init__()
         self.draw=draw
+        self.image_size=image_size
         self.init_ui()
+
 
 
     def init_ui(self):
@@ -22,7 +24,7 @@ class Show(Gtk.Window):
         self.add(darea)
 
         self.set_title("Fill & stroke")
-        self.resize(230, 150)
+        self.resize(*self.image_size)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.connect("delete-event", Gtk.main_quit)
         self.show_all()
