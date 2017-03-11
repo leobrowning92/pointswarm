@@ -16,15 +16,12 @@ def imageto_array(image_path,v=False):
     return arrayim
 
 
-if __name__ == '__main__':
+def open_show(image_path,v=False):
 
-    os.chdir(os.path.dirname(os.path.realpath(__file__)))
-
-    image_array = imageto_array("testimage.jpg",v=False)/256
+    image_array = imageto_array(image_path,v=False)/256
     h=image_array.shape[0]
     w=image_array.shape[1]
     image_list=np.reshape(image_array,((h*w),3))
-    print(kmeans(image_list,5))
 
     def draw(self,cr):
         for i in range(h):
@@ -35,3 +32,26 @@ if __name__ == '__main__':
                 cr.fill()
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
     app = Show(draw,[w,h])
+
+def open_kmean(image_path,clusters=5,v=False):
+    image_array = imageto_array(image_path,v=False)/256
+    h=image_array.shape[0]
+    w=image_array.shape[1]
+    image_list=np.reshape(image_array,((h*w),3))
+    print(kmeans(image_list,clusters))
+    def draw(self,cr):
+        for i in range(h):
+            for j in range(w):
+                cr.set_source_rgb(*image_array[i,j])
+                #cr.translate(w/2, h/2)
+                cr.rectangle(j, i, 1, 1)
+                cr.fill()
+    os.chdir(os.path.dirname(os.path.realpath(__file__)))
+    app = Show(draw,[w,h])
+
+
+if __name__ == '__main__':
+
+    os.chdir(os.path.dirname(os.path.realpath(__file__)))
+
+    open_show("testimage.jpg")
