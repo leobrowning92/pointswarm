@@ -32,8 +32,9 @@ class Show(Gtk.Window):
 
 
     def on_draw(self, wid, cr):
-        self.draw(self,cr)
+        self.sur=self.draw(self,cr)
         #print(cr,type(cr))
+
 
 
 

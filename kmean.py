@@ -32,7 +32,7 @@ def open_show(image_path,v=False):
 
     app = Show(draw,[w,h])
 
-def open_kmean(image_path,clusters=5,v=False,show=False):
+def open_kmean(image_path,clusters=5,v=False,show=False,save=False):
     image_array = imageto_array(image_path,v=False)/256
     h=image_array.shape[0]
     w=image_array.shape[1]
@@ -53,8 +53,13 @@ def open_kmean(image_path,clusters=5,v=False,show=False):
                 cr.set_source_rgb(*centers[0][i])
                 cr.rectangle(i*w/clusters, h, w/clusters, h*0.1)
                 cr.fill()
+            return cr.get_target()
+
 
         app = Show(draw,[w,h*1.1])
+        if save:
+            app.sur.write_to_png(image_path[:-4] + "_"+ str(len(centers[0]))+ "kmean"  + ".png")
+            np.savetxt(image_path[:-4] + "_"+ str(len(centers[0]))+"kmean"  + ".dat",centers[0],delimiter=',',header='RGB kmean cluster centers for '+str(len(centers[0]))+' clusters')
     return centers[0]
 
 
@@ -62,4 +67,4 @@ if __name__ == '__main__':
 
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
-    open_kmean("testimage.jpg",clusters=5,show=True,v=True)
+    open_kmean("sourceimages/IMG_9308.jpg",clusters=6,show=True,v=True,save=True)
