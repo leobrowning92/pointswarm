@@ -69,5 +69,7 @@ def point_burst(background_color = [0.1, 0.1, 0.1, 1],colors=[],
 if __name__ == '__main__':
 
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
+    colors=np.genfromtxt(fname='sourceimages/IMG_9308_kmean6.dat',skip_header=1,delimiter=',')
 
-    point_burst()
+
+    point_burst(number=10000,colors=colors,total_steps=200,image_size=[1200,900],save=True)

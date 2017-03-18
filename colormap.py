@@ -64,8 +64,9 @@ if __name__ == '__main__':
 
 
     #foreground_colors=linear_gradient([.5,0,.5],[1,1,0],n=image_size)
-    foreground_colors=random_colormap(3,total_steps,even=False)
-
+    #foreground_colors=random_colormap(3,total_steps,even=False)
+    colors=np.genfromtxt(fname='sourceimages/IMG_9308_kmean6.dat',skip_header=1,delimiter=',')
+    foreground_colors=polylinear_gradient(colors,np.linspace(0,total_steps,num=len(colors),dtype=int) ,total_steps)
 
     def step_function(self):
         # render.clear_canvas()
