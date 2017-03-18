@@ -25,18 +25,20 @@ def point_repulsor(magnitude,position,particle):
 
     return magnitude/(norm**2)*(particle-position)
 
-def point_burst(background_color = [0.1, 0.1, 0.1, 1],
-                image_size = [400,300], number=1000, total_steps=500,
+def point_burst(background_color = [0.1, 0.1, 0.1, 1],colors=[],
+                image_size = [400,300], number=1000, total_steps=200,
                 number_of_colors=2, alpha=0.01,even=True,
-                show=True,save=False,fname='test.png'):
+                show=True,save=False,fname='test.png',centered=True):
 
         UNIT=1.0/max(image_size)
         # number of particles in the system
         particles=[None]*number
+        if centered:
+            origin = [0.5,0.5]
+        else:
+            origin=[np.random.uniform(0,1), np.random.uniform(0,1)]
         for i in range(number):
-             particles[i] = Particle([0.5, 0.5], [0,0])
-
-        foreground_colors = cm.random_colormap(number_of_colors,total_steps,even=even,alpha=alpha)
+             particles[i] = Particle(origin, [0,0])
 
         def step_function(self):
             # render.clear_canvas()
