@@ -25,8 +25,9 @@ def polylinear_gradient(colors,spacing,total_steps,alpha=1):
     assert total_steps>=2*len(colors) #soft cap on num of colors wrt n
     gradient=[]
     for i in range(len(colors)-1):
-        gradient= gradient + linear_gradient(colors[i], colors[i+1], int(float(spacing[i+1])*total_steps -float(spacing[i]*total_steps)),alpha=alpha )
-    assert len(gradient)<=total_steps
+        gradient= gradient + linear_gradient(colors[i], colors[i+1], spacing[i+1] -spacing[i],alpha=alpha )
+        print(spacing[i+1] -spacing[i])
+    assert len(gradient)==total_steps
 
     return gradient
 

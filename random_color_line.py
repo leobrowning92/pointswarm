@@ -40,6 +40,13 @@ def point_burst(background_color = [0.1, 0.1, 0.1, 1],colors=[],
         for i in range(number):
              particles[i] = Particle(origin, [0,0])
 
+        if colors==[]:
+            foreground_colors = cm.random_colormap(number_of_colors, total_steps, even=even, alpha=alpha)
+        else:
+            if even:
+                spacing=np.linspace(0,total_steps,num=len(colors),dtype=int)
+                colors=[np.append(x,alpha) for x in colors]
+            foreground_colors=cm.polylinear_gradient(colors, spacing,total_steps,alpha=alpha)
         def step_function(self):
             # render.clear_canvas()
             for particle in particles:
