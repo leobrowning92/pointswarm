@@ -9,9 +9,10 @@
 - see this paper on [steering behaviour](https://red3d.com/cwr/papers/1999/gdc99steer.pdf) for some behavioural ideas
 
 ### colormap-dev
-explore the color sampling from images. 
-- could use [k-mean clustering](https://en.wikipedia.org/wiki/K-means_clustering) to group pixels from an image. however, k means tends to group to spatially equivalent groups, while [expectation-maximum](https://en.wikipedia.org/wiki/Expectation%E2%80%93maximization_algorithm) allows clusters of different sizes. Could investigate the differences between both 
+explore the color sampling from images.
+- could use [k-mean clustering](https://en.wikipedia.org/wiki/K-means_clustering) to group pixels from an image. however, k means tends to group to spatially equivalent groups, while [expectation-maximum](https://en.wikipedia.org/wiki/Expectation%E2%80%93maximization_algorithm) allows clusters of different sizes. Could investigate the differences between both
 - a byproduct of the need to sample pixels from an image could be some sort of extensability to pixel sorting and image glitching. maybe sort, blocks of pixels on an image, or bands to produce glitch patterns?
+- explore a varying alpha level to ensure that as particles become more sparse the color is not lost.
 
 
 ### master
