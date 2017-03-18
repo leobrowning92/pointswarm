@@ -60,6 +60,10 @@ def open_kmean(image_path,clusters=5,v=False,show=False,save=False):
         if save:
             app.sur.write_to_png(image_path[:-4] + "_"+ str(len(centers[0]))+ "kmean"  + ".png")
             np.savetxt(image_path[:-4] + "_"+ str(len(centers[0]))+"kmean"  + ".dat",centers[0],delimiter=',',header='RGB kmean cluster centers for '+str(len(centers[0]))+' clusters')
+    else:
+        if save:
+            np.savetxt(image_path[:-4] + "_"+ str(len(centers[0]))+"kmean"  + ".dat",centers[0],delimiter=',',header='RGB kmean cluster centers for '+str(len(centers[0]))+' clusters')
+
     return centers[0]
 
 
