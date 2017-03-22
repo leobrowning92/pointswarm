@@ -28,7 +28,7 @@ def point_repulsor(magnitude,position,particle):
 def point_burst(background_color = [0.1, 0.1, 0.1, 1],colors=[],
                 image_size = [400,300], number=1000, total_steps=200,
                 number_of_colors=2, alpha=0.01,even=True,
-                show=True,save=False,fname='test.png',centered=True):
+                show=True,save=False,fname='test.png',centered=True,particle_size=1):
 
         UNIT=1.0/max(image_size)
         # number of particles in the system
@@ -51,7 +51,7 @@ def point_burst(background_color = [0.1, 0.1, 0.1, 1],colors=[],
             # render.clear_canvas()
             for particle in particles:
                 particle.move()
-                self.circle(*particle.position,1*self.unit)
+                self.circle(*particle.position,particle_size*self.unit)
                 particle.accelerate(random_accelerator(UNIT/5,image_size))#+ point_repulsor(UNIT/200,np.array([0.5,0.6]),pos))
             return True
         if show:
@@ -69,7 +69,7 @@ def point_burst(background_color = [0.1, 0.1, 0.1, 1],colors=[],
 if __name__ == '__main__':
 
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
-    colors=np.genfromtxt(fname='sourceimages/IMG_9308_kmean6.dat',skip_header=1,delimiter=',')
 
 
-    point_burst(number=10000,colors=colors,total_steps=200,image_size=[1200,900],save=True)
+
+    point_burst(number_of_colors=3,particle_size=2,number=1000,total_steps=300,image_size=[1200,900],save=False)

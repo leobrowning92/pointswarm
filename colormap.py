@@ -26,7 +26,6 @@ def polylinear_gradient(colors,spacing,total_steps,alpha=1):
     gradient=[]
     for i in range(len(colors)-1):
         gradient= gradient + linear_gradient(colors[i], colors[i+1], spacing[i+1] -spacing[i],alpha=alpha )
-        print(spacing[i+1] -spacing[i])
     assert len(gradient)==total_steps
 
     return gradient
@@ -42,7 +41,7 @@ def random_colormap(number_of_colors,total_steps, even=True,v=True,alpha=1):
 
 
     if even:
-        spacing=np.linspace(0,1,num=number_of_colors)
+        spacing=np.linspace(0,total_steps,num=number_of_colors,dtype=int)
     else:
         for i in range(number_of_colors-2):
             spacing.append(np.random.uniform(0.01,0.99))
