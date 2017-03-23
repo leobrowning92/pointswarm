@@ -46,8 +46,11 @@ def random_colormap(number_of_colors,total_steps, even=True,v=True,alpha=1):
         for i in range(number_of_colors-2):
             spacing.append(np.random.uniform(0.01,0.99))
         spacing.append(1)
-    print("colors : ",colors)
-    print("spaciing : ", sorted(spacing))
+    if v:
+        print("colors:")
+        for i in colors:
+            print(*i)
+        print("spacing:\n", *sorted(spacing))
     return polylinear_gradient(colors,sorted(spacing),total_steps,alpha=alpha)
 
 if __name__ == '__main__':
