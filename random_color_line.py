@@ -56,7 +56,7 @@ def point_burst(background_color = [0.1, 0.1, 0.1, 1],colors=[],
             return True
         if show:
             # These are the bits that need to be run when calling the Animation
-            render = Animate(image_size, background_color, foreground_colors, step_function, interval=100, save=save , stop=total_steps)
+            render = Animate(image_size, background_color, foreground_colors, step_function, interval=100, save=save , stop=total_steps,fname=fname)
             render.start()
 
         else:

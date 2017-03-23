@@ -107,7 +107,7 @@ class Image_Creator(Render):
                 self.colorset(self.colors[i])
             self.step_function(self)
 
-        self.sur.write_to_png(time.strftime(fname))
+        self.sur.write_to_png(self.fname)
 
 
 class Animate(Render):
