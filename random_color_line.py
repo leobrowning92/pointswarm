@@ -72,4 +72,4 @@ if __name__ == '__main__':
 
 
 
-    point_burst(number_of_colors=3,particle_size=2,number=1000,total_steps=300,image_size=[1200,900],save=False)
+    point_burst(background_color = [0.1,0.1,0.1,1], number_of_colors=3, particle_size=2, number=1000, total_steps=300, image_size=[1800,1200], save=False)
