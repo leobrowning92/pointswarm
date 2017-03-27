@@ -1,8 +1,8 @@
 import os
 import cairo as cairo
 import numpy as np
-from modules.render import Animate, Image_Creator
-from modules import colormap as cm
+from render import Animate, Image_Creator
+import colormap as cm
 
 class Particle(object):
     def __init__(self,x,y,velocity):
@@ -112,16 +112,11 @@ class BoidFlock(object):
             return np.zeros(2)
 
 def flock_burst(background_color = [1, 1, 1, 1],colors=[],
-                image_size = [400,300], number=1000, total_steps=200,
-                number_of_colors=2, alpha=0.01,even=True,
+                image_size = [400,300], number=10, total_steps=200,
+                number_of_colors=2, alpha=0.1,even=True,
                 show=True,save=False,fname='test.png',particle_size=1):
 
-    os.chdir(os.path.dirname(os.path.realpath(__file__)))
-
-    # These are the required arguments for the Animation
-    background_color = [1, 1, 1, 1]
     unit=1.0/max(image_size)
-    number=200# number of particles in the system
     positions=[None]*number
     velocities=[None]*number
     for i in range(number):
@@ -143,7 +138,7 @@ def flock_burst(background_color = [1, 1, 1, 1],colors=[],
     flock = BoidFlock(positions, velocities, [0.1,0.1,0.1], np.multiply(unit,[10,50,50]),unit)
 
     def step_function(self):
-
+        print("step")
         flock.move_flock()
         for boid in flock.boids:
             pos=boid.position
@@ -163,6 +158,5 @@ def flock_burst(background_color = [1, 1, 1, 1],colors=[],
         image=Image_Creator(image_size, background_color, foreground_colors, step_function, stop=total_steps)
         image.create()
 if __name__ == '__main__':
-
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
     flock_burst()
