@@ -1,8 +1,8 @@
 import os
 import cairo as cairo
 import numpy as np
-from render import Animate, Image_Creator
-import matplotlib.cm as cm
+from modules.render import Animate, Image_Creator
+from modules import colormap as cm
 
 class Particle(object):
     def __init__(self,x,y,velocity):
@@ -111,15 +111,16 @@ class BoidFlock(object):
         else:
             return np.zeros(2)
 
-if __name__ == '__main__':
+def flock_burst(background_color = [1, 1, 1, 1],colors=[],
+                image_size = [400,300], number=1000, total_steps=200,
+                number_of_colors=2, alpha=0.01,even=True,
+                show=True,save=False,fname='test.png',particle_size=1):
 
     os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
     # These are the required arguments for the Animation
     background_color = [1, 1, 1, 1]
-    foreground_color = [(149/255, 131/255, 189/255, 0.01)]
-    image_size = 1000
-    unit=1.0/image_size
+    unit=1.0/max(image_size)
     number=200# number of particles in the system
     positions=[None]*number
     velocities=[None]*number
@@ -128,11 +129,16 @@ if __name__ == '__main__':
         velocities[i] = [np.random.uniform(0,1)*unit, np.random.uniform(0,1)*unit]
 
 
-    total_steps=200
 
 
-    cm_subsection = np.linspace(1,0, total_steps)
-    foreground_colors = [ cm.plasma(x,alpha=1) for x in cm_subsection ]
+
+    if colors==[]:
+        foreground_colors = cm.random_colormap(number_of_colors, total_steps, even=even, alpha=alpha)
+    else:
+        if even:
+            spacing=np.linspace(0,total_steps,num=len(colors),dtype=int)
+            colors=[np.append(x,alpha) for x in colors]
+        foreground_colors=cm.polylinear_gradient(colors, spacing,total_steps,alpha=alpha)
     # [seperation , alignment , com]
     flock = BoidFlock(positions, velocities, [0.1,0.1,0.1], np.multiply(unit,[10,50,50]),unit)
 
@@ -141,18 +147,22 @@ if __name__ == '__main__':
         flock.move_flock()
         for boid in flock.boids:
             pos=boid.position
-            self.circle(pos[0],pos[1],2*self.unit)
+            self.circle(pos[0],pos[1],particle_size*self.unit)
             #boid.accelerate(random_accelerator(unit/5))
         return True
 
 
-    show=True
+
     if show:
         # These are the bits that need to be run when calling the Animation
-        render = Animate(image_size, background_color, foreground_colors, step_function, interval=100, save=False, stop=total_steps)
+        render = Animate(image_size, background_color, foreground_colors, step_function, interval=100, save=save, stop=total_steps)
         render.start()
 
     else:
         #this is what needs to be run to produce an image without animation
         image=Image_Creator(image_size, background_color, foreground_colors, step_function, stop=total_steps)
         image.create()
+if __name__ == '__main__':
+
+    os.chdir(os.path.dirname(os.path.realpath(__file__)))
+    flock_burst()
