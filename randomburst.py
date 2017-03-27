@@ -1,4 +1,4 @@
-from modules.random_color_line import point_burst
+from random_color_line import point_burst
 import sys, os
 # this file is meant to be scripted.
 # it takes the following arguments in this order
