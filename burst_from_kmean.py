@@ -1,4 +1,4 @@
-from random_color_line import point_burst
+from modules.random_color_line import point_burst
 import os
 import numpy as np
 
