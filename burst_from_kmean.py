@@ -1,4 +1,4 @@
-from modules.random_color_line import point_burst
+from random_color_line import point_burst
 import os
 import numpy as np
 
@@ -10,4 +10,4 @@ if __name__ == '__main__':
     #np.random.shuffle(colors)
 
 
-    point_burst(size=2,number=1000,colors=colors,total_steps=300,image_size=[1200,900],save=False,alpha =0.01)
+    point_burst(particle_size=2,number=1000,colors=colors,total_steps=300,image_size=[1200,900],save=False,alpha =0.01)
