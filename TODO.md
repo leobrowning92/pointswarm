@@ -27,6 +27,8 @@ explore the color sampling from images.
 - a byproduct of the need to sample pixels from an image could be some sort of extensability to pixel sorting and image glitching. maybe sort, blocks of pixels on an image, or bands to produce glitch patterns?
 - explore a varying alpha level to ensure that as particles become more sparse the color is not lost.
 - another avenue to explore regarding ensuring that the colors are visible would be restricted color ranges. in RGB this could just be all values >0.3 for example. or I could play around with HSB color space.
+- Look at [this tweet](https://twitter.com/zhuanghongru/status/836450232284008453) for inspiration as to how these kmeans can be used in an image,so sick!
+    - this same kind of image cutouts could be used for pixel sorting
 
 
 ### master
