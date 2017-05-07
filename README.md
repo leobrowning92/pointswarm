@@ -2,9 +2,11 @@
 
 The works focus on generated color palates, iether by kmean clustering of the colors from a sample image, or via random generation. These color palates are then exploded using particle motion.
 
+![Example](sourceimages/example.jpg)
+
 Heavily inspired and motivated by the work of [Anders Hoff](inconvergent.net) and with code based on his work at his [GitHub](github.com/inconvergent).
 
-
+At the moment this is a personal project with minimal documentation, but if you want to know more just let me know and I will make more documentation, I just need the excuse :)
 
 ## files
 
