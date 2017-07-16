@@ -32,9 +32,9 @@ def rotate_angle(v,angle):
     return m.dot(v)
 
 
-class BoidFlock(object):
+class Flock(object):
     """The boid flock is a collection of Particle objects with the added benifit of being able to have some flocking methods applied to it as a whole"""
-    def __init__(self,positions,velocities,scalings,ranges,unit):
+    def __init__(self,interraction,positions,velocities,scalings,ranges,unit):
         assert len(positions)==len(velocities) , "the number of positions and velocities do not match"
         self.boids=[Particle(positions[i][0],positions[i][1],velocities[i]) for i in range(len(positions))]
 
@@ -55,8 +55,6 @@ class BoidFlock(object):
             v1 = self.get_seperation_velocity(boid)
             v2 = self.get_alignment_velocity(boid)
             v3 = self.get_com_velocity(boid)
-
-
             boid.accelerate((v1+v2+v3))
 
 
@@ -135,10 +133,9 @@ def flock_burst(background_color = [1, 1, 1, 1],colors=[],
             colors=[np.append(x,alpha) for x in colors]
         foreground_colors=cm.polylinear_gradient(colors, spacing,total_steps,alpha=alpha)
     # [seperation , alignment , com]
-    flock = BoidFlock(positions, velocities, [0.1,0.1,0.1], np.multiply(unit,[10,50,50]),unit)
+    flock = Flock(positions, velocities, [0.1,0.1,0.1], np.multiply(unit,[10,50,50]),unit)
 
     def step_function(self):
-        print("step")
         flock.move_flock()
         for boid in flock.boids:
             pos=boid.position
@@ -158,5 +155,4 @@ def flock_burst(background_color = [1, 1, 1, 1],colors=[],
         image=Image_Creator(image_size, background_color, foreground_colors, step_function, stop=total_steps)
         image.create()
 if __name__ == '__main__':
-    os.chdir(os.path.dirname(os.path.realpath(__file__)))
-    flock_burst()
+    flock_burst(alpha=1)
