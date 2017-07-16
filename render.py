@@ -85,11 +85,17 @@ class Render(object):
         x,y =self.scalexy([x,y])
         self.ctx.arc(x,y,r,0,np.pi*2)
         self.ctx.fill()
-    def line(self,start,end,width=1):
+    def line(self,start,end,width):
         self.ctx.set_line_width(width)
-        self.ctx.move_to(start[0],start[1])
-        self.ctx.line_to(end[0],end[1])
+        self.ctx.move_to(*start)
+        self.ctx.line_to(*end)
         self.ctx.stroke()
+    def curve(self,start,control,end,width):
+        self.ctx.set_line_width(width)
+        self.ctx.move_to(*start)
+        self.ctx.curve_to(*control,*control,*end)
+        self.ctx.stroke()
+
 
 
 class Image_Creator(Render):
