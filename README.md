@@ -1,6 +1,6 @@
 # generative-art
 
-The works focus on generated color palates, iether by kmean clustering of the colors from a sample image, or via random generation. These color palates are then exploded using particle motion.
+The work is a personal project which focus on generated color palates, iether by kmean clustering of the colors from a sample image, or via random generation. These color palates are then expressed using particle motion across a 2D canvas. An example is shown below:
 
 ![Example](sourceimages/example.jpg)
 
